@@ -98,5 +98,62 @@ public class AuthController : ControllerBase
 
         return Ok(goals);
     }
+
+    [HttpPut("profile")]
+    [Authorize]
+    public async Task<ActionResult<UserDto>> UpdateProfile([FromBody] UpdateProfileRequest request)
+    {
+        var userIdClaim = User.FindFirst("userId")?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var user = await _authService.UpdateProfileAsync(userId, request);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(user);
+    }
+
+    [HttpPut("change-password")]
+    [Authorize]
+    public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var userIdClaim = User.FindFirst("userId")?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _authService.ChangePasswordAsync(userId, request);
+        if (!result)
+        {
+            return BadRequest(new { message = "Current password is incorrect" });
+        }
+
+        return Ok(new { message = "Password changed successfully" });
+    }
+
+    [HttpDelete("account")]
+    [Authorize]
+    public async Task<ActionResult> DeleteAccount()
+    {
+        var userIdClaim = User.FindFirst("userId")?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _authService.DeleteAccountAsync(userId);
+        if (!result)
+        {
+            return NotFound();
+        }
+
+        return Ok(new { message = "Account deleted successfully" });
+    }
 }
 

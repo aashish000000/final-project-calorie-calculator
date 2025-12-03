@@ -49,4 +49,32 @@ public class UserDto
     public string FullName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    public int CalorieGoal { get; set; }
+    public int ProteinGoal { get; set; }
+    public int CarbsGoal { get; set; }
+    public int FatGoal { get; set; }
+}
+
+public class UpdateProfileRequest
+{
+    [Required]
+    [MaxLength(100)]
+    public string FirstName { get; set; } = string.Empty;
+
+    [MaxLength(100)]
+    public string? MiddleName { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string LastName { get; set; } = string.Empty;
+}
+
+public class ChangePasswordRequest
+{
+    [Required]
+    public string CurrentPassword { get; set; } = string.Empty;
+
+    [Required]
+    [MinLength(6)]
+    public string NewPassword { get; set; } = string.Empty;
 }

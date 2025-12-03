@@ -159,6 +159,31 @@ class ApiClient {
       body: JSON.stringify(goals),
     });
   }
+
+  // Profile
+  async updateProfile(data: {
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+  }): Promise<User> {
+    return this.request<User>("/auth/profile", {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    return this.request<void>("/auth/change-password", {
+      method: "PUT",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+  }
+
+  async deleteAccount(): Promise<void> {
+    return this.request<void>("/auth/account", {
+      method: "DELETE",
+    });
+  }
 }
 
 export const api = new ApiClient();

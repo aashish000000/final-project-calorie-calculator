@@ -16,6 +16,9 @@ public interface IAuthService
     Task<UserDto?> GetUserByIdAsync(int userId);
     Task<UserGoalsDto?> GetUserGoalsAsync(int userId);
     Task<UserGoalsDto?> UpdateUserGoalsAsync(int userId, UpdateGoalsRequest request);
+    Task<UserDto?> UpdateProfileAsync(int userId, UpdateProfileRequest request);
+    Task<bool> ChangePasswordAsync(int userId, ChangePasswordRequest request);
+    Task<bool> DeleteAccountAsync(int userId);
 }
 
 public class AuthService : IAuthService
@@ -146,6 +149,57 @@ public class AuthService : IAuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    public async Task<UserDto?> UpdateProfileAsync(int userId, UpdateProfileRequest request)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return null;
+
+        user.FirstName = request.FirstName;
+        user.MiddleName = request.MiddleName;
+        user.LastName = request.LastName;
+
+        await _context.SaveChangesAsync();
+
+        return MapToDto(user);
+    }
+
+    public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordRequest request)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return false;
+
+        // Verify current password
+        if (!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.PasswordHash))
+        {
+            return false;
+        }
+
+        // Hash and save new password
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAccountAsync(int userId)
+    {
+        var user = await _context.Users
+            .Include(u => u.Foods)
+            .Include(u => u.EntryItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user == null) return false;
+
+        // Delete user's foods and entries (cascade should handle this, but being explicit)
+        _context.EntryItems.RemoveRange(user.EntryItems);
+        _context.Foods.RemoveRange(user.Foods.Where(f => f.UserId == userId));
+        _context.Users.Remove(user);
+        
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     private static UserDto MapToDto(User user) => new()
     {
         Id = user.Id,
@@ -154,7 +208,11 @@ public class AuthService : IAuthService
         LastName = user.LastName,
         FullName = user.FullName,
         Email = user.Email,
-        CreatedAt = user.CreatedAt
+        CreatedAt = user.CreatedAt,
+        CalorieGoal = user.CalorieGoal,
+        ProteinGoal = user.ProteinGoal,
+        CarbsGoal = user.CarbsGoal,
+        FatGoal = user.FatGoal
     };
 }
 
