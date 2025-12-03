@@ -1,0 +1,159 @@
+import Cookies from "js-cookie";
+import type {
+  AuthResponse,
+  Food,
+  EntryItem,
+  DailyMetrics,
+  RangeMetrics,
+  CreateFoodRequest,
+  CreateEntryRequest,
+  UpdateEntryRequest,
+  User,
+  ChatMessage,
+  ChatResponse,
+  UserGoals,
+  UpdateGoalsRequest,
+} from "./types";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+class ApiClient {
+  private getToken(): string | undefined {
+    return Cookies.get("token");
+  }
+
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const token = this.getToken();
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options.headers,
+    };
+
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || `HTTP error! status: ${response.status}`);
+    }
+
+    if (response.status === 204) {
+      return {} as T;
+    }
+
+    return response.json();
+  }
+
+  // Auth
+  async register(email: string, password: string): Promise<AuthResponse> {
+    return this.request<AuthResponse>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  async login(email: string, password: string): Promise<AuthResponse> {
+    return this.request<AuthResponse>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  async getCurrentUser(): Promise<User> {
+    return this.request<User>("/auth/me");
+  }
+
+  // Foods
+  async getFoods(): Promise<Food[]> {
+    return this.request<Food[]>("/foods");
+  }
+
+  async getFood(id: number): Promise<Food> {
+    return this.request<Food>(`/foods/${id}`);
+  }
+
+  async createFood(data: CreateFoodRequest): Promise<Food> {
+    return this.request<Food>("/foods", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateFood(id: number, data: CreateFoodRequest): Promise<Food> {
+    return this.request<Food>(`/foods/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteFood(id: number): Promise<void> {
+    return this.request<void>(`/foods/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Entries
+  async getEntries(date?: string): Promise<EntryItem[]> {
+    const params = date ? `?date=${date}` : "";
+    return this.request<EntryItem[]>(`/food-entries${params}`);
+  }
+
+  async createEntry(data: CreateEntryRequest): Promise<EntryItem> {
+    return this.request<EntryItem>("/food-entries", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateEntry(id: number, data: UpdateEntryRequest): Promise<EntryItem> {
+    return this.request<EntryItem>(`/food-entries/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteEntry(id: number): Promise<void> {
+    return this.request<void>(`/food-entries/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Metrics
+  async getDailyMetrics(date?: string): Promise<DailyMetrics> {
+    const params = date ? `?date=${date}` : "";
+    return this.request<DailyMetrics>(`/metrics/daily${params}`);
+  }
+
+  async getRangeMetrics(from: string, to: string): Promise<RangeMetrics> {
+    return this.request<RangeMetrics>(`/metrics/range?from=${from}&to=${to}`);
+  }
+
+  // Chat
+  async sendChatMessage(message: string, history?: ChatMessage[]): Promise<ChatResponse> {
+    return this.request<ChatResponse>("/chat", {
+      method: "POST",
+      body: JSON.stringify({ message, history }),
+    });
+  }
+
+  // Goals
+  async getGoals(): Promise<UserGoals> {
+    return this.request<UserGoals>("/auth/goals");
+  }
+
+  async updateGoals(goals: UpdateGoalsRequest): Promise<UserGoals> {
+    return this.request<UserGoals>("/auth/goals", {
+      method: "PUT",
+      body: JSON.stringify(goals),
+    });
+  }
+}
+
+export const api = new ApiClient();
+
