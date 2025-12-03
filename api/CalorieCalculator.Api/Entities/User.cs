@@ -7,6 +7,17 @@ public class User
     public int Id { get; set; }
 
     [Required]
+    [MaxLength(100)]
+    public string FirstName { get; set; } = string.Empty;
+
+    [MaxLength(100)]
+    public string? MiddleName { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string LastName { get; set; } = string.Empty;
+
+    [Required]
     [MaxLength(255)]
     public string Email { get; set; } = string.Empty;
 
@@ -24,5 +35,10 @@ public class User
     // Navigation properties
     public ICollection<Food> Foods { get; set; } = new List<Food>();
     public ICollection<EntryItem> EntryItems { get; set; } = new List<EntryItem>();
+
+    // Computed property for full name
+    public string FullName => string.IsNullOrEmpty(MiddleName) 
+        ? $"{FirstName} {LastName}" 
+        : $"{FirstName} {MiddleName} {LastName}";
 }
 

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/lib/auth-context";
 import { registerSchema } from "@/lib/validations";
 import type { RegisterFormData } from "@/lib/validations";
-import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiUser } from "react-icons/fi";
 
 export default function RegisterPage() {
   const { register: registerUser } = useAuth();
@@ -34,7 +34,13 @@ export default function RegisterPage() {
     setError("");
     setIsSubmitting(true);
     try {
-      await registerUser(data.email, data.password);
+      await registerUser({
+        firstName: data.firstName,
+        middleName: data.middleName || undefined,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -119,10 +125,67 @@ export default function RegisterPage() {
                     </div>
                   )}
 
+                  {/* Name Fields Row */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* First Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-purple-200/80 mb-2">
+                        First Name *
+                      </label>
+                      <div className="relative">
+                        <input
+                          {...register("firstName")}
+                          type="text"
+                          className="w-full px-4 py-3 pl-11 bg-white/5 border border-purple-500/30 rounded-xl text-white placeholder-purple-300/40 focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:border-transparent transition-all"
+                          placeholder="John"
+                        />
+                        <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/60" />
+                      </div>
+                      {errors.firstName && (
+                        <p className="mt-1 text-xs text-red-400">{errors.firstName.message}</p>
+                      )}
+                    </div>
+
+                    {/* Last Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-purple-200/80 mb-2">
+                        Last Name *
+                      </label>
+                      <div className="relative">
+                        <input
+                          {...register("lastName")}
+                          type="text"
+                          className="w-full px-4 py-3 pl-11 bg-white/5 border border-purple-500/30 rounded-xl text-white placeholder-purple-300/40 focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:border-transparent transition-all"
+                          placeholder="Doe"
+                        />
+                        <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/60" />
+                      </div>
+                      {errors.lastName && (
+                        <p className="mt-1 text-xs text-red-400">{errors.lastName.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Middle Name (Optional) */}
+                  <div>
+                    <label className="block text-sm font-medium text-purple-200/80 mb-2">
+                      Middle Name <span className="text-purple-400/50">(Optional)</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        {...register("middleName")}
+                        type="text"
+                        className="w-full px-4 py-3 pl-11 bg-white/5 border border-purple-500/30 rounded-xl text-white placeholder-purple-300/40 focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:border-transparent transition-all"
+                        placeholder="Michael"
+                      />
+                      <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/60" />
+                    </div>
+                  </div>
+
                   {/* Email Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Email Address
+                      Email Address *
                     </label>
                     <div className="relative">
                       <input
@@ -134,14 +197,14 @@ export default function RegisterPage() {
                       <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/60" />
                     </div>
                     {errors.email && (
-                      <p className="mt-2 text-sm text-red-400">{errors.email.message}</p>
+                      <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>
                     )}
                   </div>
 
                   {/* Password Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Password
+                      Password *
                     </label>
                     <div className="relative">
                       <input
@@ -160,14 +223,14 @@ export default function RegisterPage() {
                       </button>
                     </div>
                     {errors.password && (
-                      <p className="mt-2 text-sm text-red-400">{errors.password.message}</p>
+                      <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>
                     )}
                   </div>
 
                   {/* Confirm Password Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Confirm Password
+                      Confirm Password *
                     </label>
                     <div className="relative">
                       <input
@@ -186,7 +249,7 @@ export default function RegisterPage() {
                       </button>
                     </div>
                     {errors.confirmPassword && (
-                      <p className="mt-2 text-sm text-red-400">{errors.confirmPassword.message}</p>
+                      <p className="mt-1 text-xs text-red-400">{errors.confirmPassword.message}</p>
                     )}
                   </div>
 

@@ -39,6 +39,9 @@ public class AuthService : IAuthService
 
         var user = new User
         {
+            FirstName = request.FirstName,
+            MiddleName = request.MiddleName,
+            LastName = request.LastName,
             Email = request.Email.ToLower(),
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             CreatedAt = DateTime.UtcNow
@@ -146,6 +149,10 @@ public class AuthService : IAuthService
     private static UserDto MapToDto(User user) => new()
     {
         Id = user.Id,
+        FirstName = user.FirstName,
+        MiddleName = user.MiddleName,
+        LastName = user.LastName,
+        FullName = user.FullName,
         Email = user.Email,
         CreatedAt = user.CreatedAt
     };
