@@ -139,8 +139,8 @@ export default function PrivacyPolicyPage() {
             <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">6.2 Data Deletion</h3>
             <p className="text-gray-600 leading-relaxed">
               To delete your account and data, please contact us at{" "}
-              <a href="mailto:support@caloriecalc.app" className="text-indigo-600 hover:underline">
-                support@caloriecalc.app
+              <a href="mailto:aa.aashishjoshi13@gmail.com" className="text-indigo-600 hover:underline">
+                aa.aashishjoshi13@gmail.com
               </a>
             </p>
 
@@ -172,8 +172,8 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className="list-none pl-0 text-gray-600 space-y-2 mt-4">
               <li><strong>Email:</strong>{" "}
-                <a href="mailto:support@caloriecalc.app" className="text-indigo-600 hover:underline">
-                  support@caloriecalc.app
+                <a href="mailto:aa.aashishjoshi13@gmail.com" className="text-indigo-600 hover:underline">
+                  aa.aashishjoshi13@gmail.com
                 </a>
               </li>
             </ul>

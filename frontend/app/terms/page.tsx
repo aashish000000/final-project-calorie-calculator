@@ -200,8 +200,8 @@ export default function TermsOfServicePage() {
             </p>
             <ul className="list-none pl-0 text-gray-600 space-y-2 mt-4">
               <li><strong>Email:</strong>{" "}
-                <a href="mailto:support@caloriecalc.app" className="text-teal-600 hover:underline">
-                  support@caloriecalc.app
+                <a href="mailto:aa.aashishjoshi13@gmail.com" className="text-teal-600 hover:underline">
+                  aa.aashishjoshi13@gmail.com
                 </a>
               </li>
             </ul>
