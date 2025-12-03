@@ -264,9 +264,9 @@ export default function RegisterPage() {
                     />
                     <label htmlFor="terms" className="text-sm text-purple-300/70 cursor-pointer">
                       I agree to the{" "}
-                      <span className="text-teal-400 hover:text-teal-300">Terms</span>
+                      <Link href="/terms" className="text-teal-400 hover:text-teal-300 underline">Terms</Link>
                       {" "}and{" "}
-                      <span className="text-teal-400 hover:text-teal-300">Privacy Policy</span>
+                      <Link href="/privacy-policy" className="text-teal-400 hover:text-teal-300 underline">Privacy Policy</Link>
                     </label>
                   </div>
 
