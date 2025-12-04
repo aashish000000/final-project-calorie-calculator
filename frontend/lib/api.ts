@@ -15,7 +15,7 @@ import type {
   UpdateGoalsRequest,
 } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
 
 class ApiClient {
   private getToken(): string | undefined {
@@ -36,6 +36,7 @@ class ApiClient {
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
       headers,
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -142,9 +143,18 @@ class ApiClient {
 
   // Chat
   async sendChatMessage(message: string, history?: ChatMessage[]): Promise<ChatResponse> {
+    // Convert frontend ChatMessage format to backend DTO format
+    const historyDto = history?.map(msg => ({
+      sender: msg.role,
+      text: msg.content
+    }));
+
     return this.request<ChatResponse>("/chat", {
       method: "POST",
-      body: JSON.stringify({ message, history }),
+      body: JSON.stringify({ 
+        message, 
+        history: historyDto 
+      }),
     });
   }
 
@@ -181,6 +191,20 @@ class ApiClient {
 
   async deleteAccount(): Promise<void> {
     return this.request<void>("/auth/account", {
+      method: "DELETE",
+    });
+  }
+
+  // Profile Picture
+  async uploadProfilePicture(imageData: string): Promise<User> {
+    return this.request<User>("/auth/profile-picture", {
+      method: "POST",
+      body: JSON.stringify({ imageData }),
+    });
+  }
+
+  async removeProfilePicture(): Promise<void> {
+    return this.request<void>("/auth/profile-picture", {
       method: "DELETE",
     });
   }

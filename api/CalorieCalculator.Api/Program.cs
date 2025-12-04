@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext (using SQLite for cross-platform compatibility)
+// Add DbContext (using SQLite for simplicity)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 

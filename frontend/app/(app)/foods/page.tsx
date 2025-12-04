@@ -185,25 +185,25 @@ export default function FoodsPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-4">
               <div>
                 <label className="label">Name</label>
-                <input {...register("name")} className={`input ${errors.name ? "input-error" : ""}`} />
+                <input {...register("name")} className={`input bg-white text-gray-900 ${errors.name ? "input-error" : ""}`} />
                 {errors.name && <p className="error-text">{errors.name.message}</p>}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="label">Calories/100g</label>
-                  <input type="number" step="0.1" {...register("caloriesPer100g")} className="input" />
+                  <input type="number" step="0.1" {...register("caloriesPer100g")} className="input bg-white text-gray-900" />
                 </div>
                 <div>
                   <label className="label">Protein/100g</label>
-                  <input type="number" step="0.1" {...register("proteinPer100g")} className="input" />
+                  <input type="number" step="0.1" {...register("proteinPer100g")} className="input bg-white text-gray-900" />
                 </div>
                 <div>
                   <label className="label">Carbs/100g</label>
-                  <input type="number" step="0.1" {...register("carbsPer100g")} className="input" />
+                  <input type="number" step="0.1" {...register("carbsPer100g")} className="input bg-white text-gray-900" />
                 </div>
                 <div>
                   <label className="label">Fat/100g</label>
-                  <input type="number" step="0.1" {...register("fatPer100g")} className="input" />
+                  <input type="number" step="0.1" {...register("fatPer100g")} className="input bg-white text-gray-900" />
                 </div>
               </div>
               <div className="flex gap-3 pt-4">

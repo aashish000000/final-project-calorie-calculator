@@ -7,9 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/lib/auth-context";
 import { loginSchema, type LoginFormData } from "@/lib/validations";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useLanguage } from "@/lib/i18n/language-context";
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { t } = useLanguage();
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -93,10 +96,10 @@ export default function LoginPage() {
             <div className="lg:w-1/2 bg-gradient-to-br from-slate-800 via-purple-900 to-slate-900 p-8 lg:p-10">
               <div className="max-w-sm mx-auto">
                 <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2">
-                  Log in to CalorieCalc<span className="text-cyan-400">™</span>
+                  {t('auth.login')} to CalorieCalc<span className="text-cyan-400">™</span>
                 </h1>
                 <p className="text-purple-300/70 mb-6 text-sm">
-                  Welcome back! Please enter your details.
+                  {t('auth.welcome')}! {t('auth.welcomeSubtitle')}
                 </p>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -109,7 +112,7 @@ export default function LoginPage() {
                   {/* Email Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Your Email
+                      {t('auth.email')}
                     </label>
                     <div className="relative">
                       <input
@@ -128,7 +131,7 @@ export default function LoginPage() {
                   {/* Password Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Your Password
+                      {t('auth.password')}
                     </label>
                     <div className="relative">
                       <input
@@ -163,7 +166,7 @@ export default function LoginPage() {
                       <span className="text-purple-300/70">Remember me</span>
                     </label>
                     <button type="button" className="text-cyan-400 hover:text-cyan-300 transition-colors">
-                      Forgot password?
+                      {t('auth.forgotPassword')}
                     </button>
                   </div>
 
@@ -173,24 +176,27 @@ export default function LoginPage() {
                     disabled={isSubmitting}
                     className="w-full py-3 px-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-teal-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-cyan-500/25"
                   >
-                    {isSubmitting ? "Signing in..." : "Log in"}
+                    {isSubmitting ? t('common.loading') : t('auth.login')}
                   </button>
                 </form>
 
                 {/* Sign Up Link */}
                 <p className="mt-6 text-center text-purple-300/60 text-sm">
-                  Don&apos;t have an account?{" "}
+                  {t('auth.noAccount')}{" "}
                   <Link
                     href="/auth/register"
                     className="text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
                   >
-                    Sign up
+                    {t('auth.signup')}
                   </Link>
                 </p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Language Selector Footer - Facebook Style */}
+        <LanguageSelector variant="footer" />
       </div>
     </div>
   );

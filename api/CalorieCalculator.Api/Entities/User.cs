@@ -26,6 +26,9 @@ public class User
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    // Profile Picture (stored as base64 data URL)
+    public string? ProfilePicture { get; set; }
+
     // Daily Goals
     public int CalorieGoal { get; set; } = 2000;
     public int ProteinGoal { get; set; } = 150;

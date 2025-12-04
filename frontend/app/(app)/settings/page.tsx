@@ -1,13 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import {
-  FiSettings,
-  FiGlobe,
   FiShield,
-  FiLock,
   FiList,
   FiSliders,
   FiArrowLeft,
@@ -18,14 +14,18 @@ import {
   FiTrash2,
   FiFileText,
   FiHelpCircle,
-  FiEdit3,
   FiKey,
+  FiGlobe,
 } from "react-icons/fi";
 import Link from "next/link";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useLanguage } from "@/lib/i18n/language-context";
 
 export default function SettingsPage() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const { language, languages } = useLanguage();
+  const currentLang = languages.find((l) => l.code === language);
 
   // Get user initials for avatar
   const getInitials = () => {
@@ -119,9 +119,17 @@ export default function SettingsPage() {
           href="/settings/account"
           className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
         >
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
-            {getInitials()}
-          </div>
+          {user?.profilePicture ? (
+            <img
+              src={user.profilePicture}
+              alt="Profile"
+              className="w-16 h-16 rounded-full object-cover shadow-md ring-2 ring-white"
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+              {getInitials()}
+            </div>
+          )}
           <div className="flex-1">
             <h2 className="text-lg font-semibold text-gray-900">
               {user?.fullName || `${user?.firstName} ${user?.lastName}`}
@@ -137,9 +145,7 @@ export default function SettingsPage() {
             <Link
               key={item.label}
               href={item.href}
-              className={`flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors ${
-                index !== menuItems.length - 1 ? "border-b border-gray-100" : ""
-              }`}
+              className={`flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100`}
             >
               <div className={`w-10 h-10 rounded-full ${item.color} flex items-center justify-center`}>
                 <item.icon className="w-5 h-5" />
@@ -151,6 +157,8 @@ export default function SettingsPage() {
               <FiChevronRight className="w-5 h-5 text-gray-400" />
             </Link>
           ))}
+          {/* Language Selector */}
+          <LanguageSelector variant="settings" />
         </div>
 
         {/* Legal & Support */}

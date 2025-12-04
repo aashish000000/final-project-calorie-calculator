@@ -155,5 +155,43 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "Account deleted successfully" });
     }
+
+    [HttpPost("profile-picture")]
+    [Authorize]
+    public async Task<ActionResult<UserDto>> UploadProfilePicture([FromBody] UploadProfilePictureRequest request)
+    {
+        var userIdClaim = User.FindFirst("userId")?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var user = await _authService.UploadProfilePictureAsync(userId, request.ImageData);
+        if (user == null)
+        {
+            return BadRequest(new { message = "Invalid image data" });
+        }
+
+        return Ok(user);
+    }
+
+    [HttpDelete("profile-picture")]
+    [Authorize]
+    public async Task<ActionResult> RemoveProfilePicture()
+    {
+        var userIdClaim = User.FindFirst("userId")?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _authService.RemoveProfilePictureAsync(userId);
+        if (!result)
+        {
+            return NotFound();
+        }
+
+        return Ok(new { message = "Profile picture removed successfully" });
+    }
 }
 

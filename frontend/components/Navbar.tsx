@@ -60,9 +60,17 @@ export function Navbar() {
               className="flex items-center gap-2 px-2 py-1.5 rounded-full hover:bg-gray-100 transition-colors"
             >
               {/* Avatar */}
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-md">
-                {getInitials()}
-              </div>
+              {user?.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt="Profile"
+                  className="w-9 h-9 rounded-full object-cover shadow-md ring-2 ring-white"
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-md">
+                  {getInitials()}
+                </div>
+              )}
               {/* Name */}
               <span className="hidden sm:block font-medium text-gray-800 max-w-[120px] truncate">
                 {getDisplayName()}
@@ -76,9 +84,17 @@ export function Navbar() {
                 {/* Profile Header */}
                 <div className="px-4 py-3 border-b border-gray-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
-                      {getInitials()}
-                    </div>
+                    {user?.profilePicture ? (
+                      <img
+                        src={user.profilePicture}
+                        alt="Profile"
+                        className="w-12 h-12 rounded-full object-cover shadow-md ring-2 ring-white"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        {getInitials()}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-900 truncate">
                         {user?.fullName || `${user?.firstName} ${user?.lastName}`}

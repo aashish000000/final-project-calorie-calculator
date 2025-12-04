@@ -11,9 +11,10 @@ export function ChatBot() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
-      content: "👋 Hi! I'm your nutrition assistant. Ask me about:\n\n• High-protein foods\n• Meal suggestions\n• How to use the app\n\nHow can I help you today?",
+      content: "👋 Hi! I'm your nutrition assistant. Ask me anything about food and nutrition!",
     },
   ]);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -40,6 +41,12 @@ export function ChatBot() {
 
     const userMessage = input.trim();
     setInput("");
+    setHasInteracted(true);
+
+    // Prepare conversation history for API (exclude the initial welcome message)
+    const conversationHistory = messages
+      .filter((msg, idx) => idx > 0) // Skip first welcome message
+      .map(msg => ({ role: msg.role, content: msg.content }));
 
     // Add user message
     const newMessages: ChatMessage[] = [
@@ -50,26 +57,25 @@ export function ChatBot() {
     setIsLoading(true);
 
     try {
-      const response = await api.sendChatMessage(userMessage, messages);
+      // Call API with message and conversation history
+      const response = await api.sendChatMessage(userMessage, conversationHistory);
 
-      // Add assistant response
-      setMessages([
-        ...newMessages,
-        { role: "assistant", content: response.message },
-      ]);
-
-      // Handle suggested actions
-      if (response.suggestedAction === "log_food") {
-        // Could show a button or auto-navigate
-      } else if (response.suggestedAction === "view_foods") {
-        // Could show a button or auto-navigate
+      // Use response.reply from the API - no hard-coded strings
+      if (response.reply && response.reply.trim()) {
+        setMessages([
+          ...newMessages,
+          { role: "assistant", content: response.reply },
+        ]);
+      } else {
+        throw new Error("Empty response");
       }
     } catch (error) {
+      console.error("Chat error:", error);
       setMessages([
         ...newMessages,
         {
           role: "assistant",
-          content: "Sorry, I encountered an error. Please try again!",
+          content: "Sorry, something went wrong. Please try again.",
         },
       ]);
     } finally {

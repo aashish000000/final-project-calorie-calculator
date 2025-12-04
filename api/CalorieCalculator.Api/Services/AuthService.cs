@@ -19,6 +19,8 @@ public interface IAuthService
     Task<UserDto?> UpdateProfileAsync(int userId, UpdateProfileRequest request);
     Task<bool> ChangePasswordAsync(int userId, ChangePasswordRequest request);
     Task<bool> DeleteAccountAsync(int userId);
+    Task<UserDto?> UploadProfilePictureAsync(int userId, string imageData);
+    Task<bool> RemoveProfilePictureAsync(int userId);
 }
 
 public class AuthService : IAuthService
@@ -200,6 +202,34 @@ public class AuthService : IAuthService
         return true;
     }
 
+    public async Task<UserDto?> UploadProfilePictureAsync(int userId, string imageData)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return null;
+
+        // Validate that it's a valid base64 image data URL
+        if (!imageData.StartsWith("data:image/"))
+        {
+            return null;
+        }
+
+        user.ProfilePicture = imageData;
+        await _context.SaveChangesAsync();
+
+        return MapToDto(user);
+    }
+
+    public async Task<bool> RemoveProfilePictureAsync(int userId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return false;
+
+        user.ProfilePicture = null;
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     private static UserDto MapToDto(User user) => new()
     {
         Id = user.Id,
@@ -208,6 +238,7 @@ public class AuthService : IAuthService
         LastName = user.LastName,
         FullName = user.FullName,
         Email = user.Email,
+        ProfilePicture = user.ProfilePicture,
         CreatedAt = user.CreatedAt,
         CalorieGoal = user.CalorieGoal,
         ProteinGoal = user.ProteinGoal,

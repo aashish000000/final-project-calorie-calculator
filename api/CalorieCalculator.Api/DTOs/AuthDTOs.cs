@@ -48,11 +48,18 @@ public class UserDto
     public string LastName { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string? ProfilePicture { get; set; }
     public DateTime CreatedAt { get; set; }
     public int CalorieGoal { get; set; }
     public int ProteinGoal { get; set; }
     public int CarbsGoal { get; set; }
     public int FatGoal { get; set; }
+}
+
+public class UploadProfilePictureRequest
+{
+    [Required]
+    public string ImageData { get; set; } = string.Empty; // Base64 data URL
 }
 
 public class UpdateProfileRequest

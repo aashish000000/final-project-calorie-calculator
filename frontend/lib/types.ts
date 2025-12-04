@@ -5,7 +5,12 @@ export interface User {
   lastName: string;
   fullName: string;
   email: string;
+  profilePicture?: string;
   createdAt: string;
+  calorieGoal?: number;
+  proteinGoal?: number;
+  carbsGoal?: number;
+  fatGoal?: number;
 }
 
 export interface AuthResponse {
@@ -107,18 +112,21 @@ export interface UpdateGoalsRequest {
 }
 
 // Chat types
+// Frontend internal chat message format
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
 
+// API request/response DTOs matching backend
 export interface ChatRequest {
   message: string;
-  history?: ChatMessage[];
+  history?: Array<{
+    sender: string;
+    text: string;
+  }>;
 }
 
 export interface ChatResponse {
-  message: string;
-  suggestedAction?: string;
-  actionData?: unknown;
+  reply: string;
 }

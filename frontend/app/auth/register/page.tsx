@@ -8,9 +8,12 @@ import { useAuth } from "@/lib/auth-context";
 import { registerSchema } from "@/lib/validations";
 import type { RegisterFormData } from "@/lib/validations";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiUser } from "react-icons/fi";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useLanguage } from "@/lib/i18n/language-context";
 
 export default function RegisterPage() {
   const { register: registerUser } = useAuth();
+  const { t } = useLanguage();
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -112,10 +115,10 @@ export default function RegisterPage() {
             <div className="lg:w-1/2 bg-gradient-to-br from-slate-800 via-purple-900 to-slate-900 p-8 lg:p-10">
               <div className="max-w-sm mx-auto">
                 <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2">
-                  Create your account<span className="text-teal-400">™</span>
+                  {t('auth.createAccountTitle')}<span className="text-teal-400">™</span>
                 </h1>
                 <p className="text-purple-300/70 mb-6 text-sm">
-                  Start your nutrition journey today
+                  {t('auth.startJourney')}
                 </p>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -130,7 +133,7 @@ export default function RegisterPage() {
                     {/* First Name */}
                     <div>
                       <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                        First Name *
+                        {t('auth.firstName')} *
                       </label>
                       <div className="relative">
                         <input
@@ -149,7 +152,7 @@ export default function RegisterPage() {
                     {/* Last Name */}
                     <div>
                       <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                        Last Name *
+                        {t('auth.lastName')} *
                       </label>
                       <div className="relative">
                         <input
@@ -169,7 +172,7 @@ export default function RegisterPage() {
                   {/* Middle Name (Optional) */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Middle Name <span className="text-purple-400/50">(Optional)</span>
+                      {t('auth.middleName')} <span className="text-purple-400/50">({t('common.optional')})</span>
                     </label>
                     <div className="relative">
                       <input
@@ -185,7 +188,7 @@ export default function RegisterPage() {
                   {/* Email Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Email Address *
+                      {t('auth.email')} *
                     </label>
                     <div className="relative">
                       <input
@@ -204,7 +207,7 @@ export default function RegisterPage() {
                   {/* Password Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Password *
+                      {t('auth.password')} *
                     </label>
                     <div className="relative">
                       <input
@@ -230,7 +233,7 @@ export default function RegisterPage() {
                   {/* Confirm Password Input */}
                   <div>
                     <label className="block text-sm font-medium text-purple-200/80 mb-2">
-                      Confirm Password *
+                      {t('auth.confirmPassword')} *
                     </label>
                     <div className="relative">
                       <input
@@ -263,10 +266,10 @@ export default function RegisterPage() {
                       className="mt-1 w-4 h-4 rounded border-purple-500/30 bg-white/5 text-teal-500 focus:ring-teal-400/50 focus:ring-offset-0"
                     />
                     <label htmlFor="terms" className="text-sm text-purple-300/70 cursor-pointer">
-                      I agree to the{" "}
-                      <Link href="/terms" className="text-teal-400 hover:text-teal-300 underline">Terms</Link>
-                      {" "}and{" "}
-                      <Link href="/privacy-policy" className="text-teal-400 hover:text-teal-300 underline">Privacy Policy</Link>
+                      {t('auth.agreeTerms')}{" "}
+                      <Link href="/terms" className="text-teal-400 hover:text-teal-300 underline">{t('auth.terms')}</Link>
+                      {" "}{t('auth.and')}{" "}
+                      <Link href="/privacy-policy" className="text-teal-400 hover:text-teal-300 underline">{t('auth.privacy')}</Link>
                     </label>
                   </div>
 
@@ -276,24 +279,27 @@ export default function RegisterPage() {
                     disabled={isSubmitting}
                     className="w-full py-3 px-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold rounded-xl hover:from-teal-400 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-teal-500/25"
                   >
-                    {isSubmitting ? "Creating account..." : "Sign up"}
+                    {isSubmitting ? t('auth.creatingAccount') : t('auth.signup')}
                   </button>
                 </form>
 
                 {/* Sign In Link */}
                 <p className="mt-6 text-center text-purple-300/60 text-sm">
-                  Already have an account?{" "}
+                  {t('auth.haveAccount')}{" "}
                   <Link
                     href="/auth/login"
                     className="text-teal-400 hover:text-teal-300 font-medium transition-colors"
                   >
-                    Log in
+                    {t('auth.login')}
                   </Link>
                 </p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Language Selector Footer - Facebook Style */}
+        <LanguageSelector variant="footer" />
       </div>
     </div>
   );
