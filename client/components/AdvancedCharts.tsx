@@ -20,7 +20,7 @@ export default function AdvancedCharts() {
 
   const { data: rangeMetrics, isLoading } = useQuery({
     queryKey: ["metrics-range", startDate, endDate],
-    queryFn: () => api.getMetricsRange(startDate, endDate),
+    queryFn: () => api.getRangeMetrics(startDate, endDate),
   });
 
   const { data: userGoals } = useQuery({
@@ -175,7 +175,7 @@ export default function AdvancedCharts() {
             <div className="flex justify-between text-xs mb-1">
               <span className="text-gray-600">Protein</span>
               <span className="font-medium text-green-600">
-                {Math.round(rangeMetrics.protein || 0)}g
+                {Math.round(rangeMetrics.totalProtein || 0)}g
               </span>
             </div>
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -183,7 +183,7 @@ export default function AdvancedCharts() {
                 className="h-full bg-green-500 rounded-full"
                 style={{
                   width: `${Math.min(
-                    ((rangeMetrics.protein || 0) / (userGoals.proteinGoal * 7)) * 100,
+                    ((rangeMetrics.totalProtein || 0) / (userGoals.proteinGoal * 7)) * 100,
                     100
                   )}%`,
                 }}
@@ -195,7 +195,7 @@ export default function AdvancedCharts() {
             <div className="flex justify-between text-xs mb-1">
               <span className="text-gray-600">Carbs</span>
               <span className="font-medium text-amber-600">
-                {Math.round(rangeMetrics.carbs || 0)}g
+                {Math.round(rangeMetrics.totalCarbs || 0)}g
               </span>
             </div>
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -203,7 +203,7 @@ export default function AdvancedCharts() {
                 className="h-full bg-amber-500 rounded-full"
                 style={{
                   width: `${Math.min(
-                    ((rangeMetrics.carbs || 0) / (userGoals.carbsGoal * 7)) * 100,
+                    ((rangeMetrics.totalCarbs || 0) / (userGoals.carbsGoal * 7)) * 100,
                     100
                   )}%`,
                 }}
@@ -215,7 +215,7 @@ export default function AdvancedCharts() {
             <div className="flex justify-between text-xs mb-1">
               <span className="text-gray-600">Fat</span>
               <span className="font-medium text-red-600">
-                {Math.round(rangeMetrics.fat || 0)}g
+                {Math.round(rangeMetrics.totalFat || 0)}g
               </span>
             </div>
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -223,7 +223,7 @@ export default function AdvancedCharts() {
                 className="h-full bg-red-500 rounded-full"
                 style={{
                   width: `${Math.min(
-                    ((rangeMetrics.fat || 0) / (userGoals.fatGoal * 7)) * 100,
+                    ((rangeMetrics.totalFat || 0) / (userGoals.fatGoal * 7)) * 100,
                     100
                   )}%`,
                 }}

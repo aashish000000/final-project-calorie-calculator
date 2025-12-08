@@ -26,7 +26,7 @@ export default function FavoriteMeals() {
     mutationFn: async (mealId: number) => {
       const items = await api.getFavoriteMealItems(mealId);
       // Add all items from the favorite meal
-      await Promise.all(items.map((item) => api.addEntry(item)));
+      await Promise.all(items.map((item) => api.createEntry(item)));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["metrics"] });

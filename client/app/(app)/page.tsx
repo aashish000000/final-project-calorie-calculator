@@ -162,6 +162,7 @@ export default function DashboardPage() {
   const proteinGoal = userGoals?.proteinGoal ?? 150;
   const carbsGoal = userGoals?.carbsGoal ?? 250;
   const fatGoal = userGoals?.fatGoal ?? 65;
+  const waterGoalMilliliters = userGoals?.waterGoalMilliliters ?? 2000;
 
   const calories = dailyMetrics?.totalCalories || 0;
   const protein = dailyMetrics?.totalProtein || 0;
@@ -512,6 +513,7 @@ export default function DashboardPage() {
           proteinGoal,
           carbsGoal,
           fatGoal,
+          waterGoalMilliliters,
         }}
       />
     </div>
