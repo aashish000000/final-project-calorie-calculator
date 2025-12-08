@@ -2,12 +2,12 @@
 
 A full-stack AI-powered calorie tracking application with intelligent nutrition assistance, photo recognition, and comprehensive analytics.
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 calorie-calculator/
 │
-├── 📂 backend/              ← Backend API (C# / ASP.NET Core)
+├──  backend/              ← Backend API (C# / ASP.NET Core)
 │   ├── CalorieCalculator.Api/
 │   │   ├── Controllers/     ← API endpoints
 │   │   ├── Services/        ← Business logic & AI services
@@ -17,7 +17,7 @@ calorie-calculator/
 │   │   └── Program.cs       ← App entry point
 │   └── CalorieCalculator.sln
 │
-├── 📂 client/               ← Main Application (Next.js / React)
+├── client/               ← Main Application (Next.js / React)
 │   ├── app/
 │   │   ├── (app)/           ← Protected app pages
 │   │   │   ├── foods/       ← Food database
@@ -38,13 +38,13 @@ calorie-calculator/
 │       ├── api.ts           ← API client
 │       └── auth-context.tsx ← Authentication
 │
-└── 📂 docs/                 ← Documentation/Landing Page
+└──  docs/                 ← Documentation/Landing Page
     ├── app/
     ├── components/          ← Landing page components
     └── page.tsx
 ```
 
-## 🚀 Quick Start
+ Quick Start
 
 ### 1. Start the Backend (Port 5000)
 ```bash
@@ -91,49 +91,49 @@ Docs will run at: **http://localhost:3001**
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
-## ✨ Features
+##  Features
 
 ### Core Features
-- **📊 Food Logging**: Track daily meals and macros with detailed nutrition breakdown
-- **🎯 Goal Setting**: Set and track personalized calorie and macro goals
-- **🗂️ Food Database**: Comprehensive searchable food database
-- **📈 Dashboard**: Real-time progress tracking with interactive visualizations
-- **🌐 Multi-language**: Support for multiple languages
-- **🔐 Authentication**: Secure JWT-based user authentication
+- ** Food Logging**: Track daily meals and macros with detailed nutrition breakdown
+- ** Goal Setting**: Set and track personalized calorie and macro goals
+- ** Food Database**: Comprehensive searchable food database
+- ** Dashboard**: Real-time progress tracking with interactive visualizations
+- ** Multi-language**: Support for multiple languages
+- ** Authentication**: Secure JWT-based user authentication
 
-### 🤖 AI-Powered Features
-1. **💬 AI Nutrition Chatbot**
+###  AI-Powered Features
+1. ** AI Nutrition Chatbot**
    - Personalized nutrition advice powered by OpenAI GPT-4
    - Context-aware responses based on your daily intake
    - Answers questions about calories, macros, and health tips
 
-2. **📸 Food Photo Recognition**
+2. **Food Photo Recognition**
    - Take or upload photos of your meals
    - AI automatically identifies food items
    - Estimates portion sizes and nutrition
    - One-tap to add entire meal to your log
 
-3. **📝 Recipe Analyzer**
+3. ** Recipe Analyzer**
    - Paste any recipe text
    - AI extracts ingredients and instructions
    - Calculates total and per-serving nutrition
    - Detailed ingredient breakdown
 
-4. **💡 Smart Food Suggestions**
+4. ** Smart Food Suggestions**
    - AI recommends foods based on remaining daily goals
    - Personalized to your macro needs
    - Shows why each food is suggested
    - Estimated serving sizes
 
-### 📊 Analytics & Tracking
-5. **📈 Advanced Charts**
+### Analytics & Tracking
+5. **Advanced Charts**
    - 7-day calorie trend visualization
    - Average daily intake analytics
    - Trend analysis (gaining/losing)
    - Days on track counter
    - Weekly macro distribution
 
-6. **💧 Water Tracking**
+6. ** Water Tracking**
    - Daily water intake goals
    - Quick-add buttons (250ml, 350ml, 500ml, 750ml)
    - Custom amount input
@@ -141,7 +141,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
    - Today's hydration log
 
 ### ⚡ Productivity Features
-7. **⭐ Favorite Meals (Quick Actions)**
+7. ** Favorite Meals (Quick Actions)**
    - Save frequently eaten meals
    - One-tap to add entire meal to today
    - See total nutrition for each favorite
@@ -281,6 +281,4 @@ MIT License - feel free to use this project for learning and development.
 - Next.js team for the amazing framework
 - ASP.NET Core team for the robust backend framework
 
----
 
-**Built with ❤️ using AI-powered technology**
