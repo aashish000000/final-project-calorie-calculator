@@ -8,14 +8,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { api } from "@/lib/api";
 import { entrySchema, type EntryFormData } from "@/lib/validations";
-import { FiCheck, FiArrowLeft } from "react-icons/fi";
+import { FiCheck, FiArrowLeft, FiCamera } from "react-icons/fi";
 import Link from "next/link";
+import FoodPhotoModal from "@/components/FoodPhotoModal";
 
 export default function LogPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [selectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [successMessage, setSuccessMessage] = useState("");
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   const { data: foods, isLoading: isLoadingFoods } = useQuery({
     queryKey: ["foods"],
@@ -73,14 +75,23 @@ export default function LogPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/" className="p-2 hover:bg-gray-100 rounded-lg">
-          <FiArrowLeft className="w-5 h-5" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Log Meal</h1>
-          <p className="text-gray-600">Record what you ate</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="p-2 hover:bg-gray-100 rounded-lg">
+            <FiArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Log Meal</h1>
+            <p className="text-gray-600">Record what you ate</p>
+          </div>
         </div>
+        <button
+          onClick={() => setShowPhotoModal(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+        >
+          <FiCamera className="w-5 h-5" />
+          <span className="hidden sm:inline">Scan Food</span>
+        </button>
       </div>
 
       {/* Success Message */}
@@ -172,6 +183,16 @@ export default function LogPage() {
           Manage Foods
         </Link>
       </div>
+
+      {/* Food Photo Modal */}
+      <FoodPhotoModal
+        isOpen={showPhotoModal}
+        onClose={() => setShowPhotoModal(false)}
+        onSuccess={() => {
+          setSuccessMessage("Foods added from photo successfully!");
+          setTimeout(() => setSuccessMessage(""), 3000);
+        }}
+      />
     </div>
   );
 }

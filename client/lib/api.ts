@@ -208,6 +208,40 @@ class ApiClient {
       method: "DELETE",
     });
   }
+
+  // Image Recognition
+  async analyzeFood(imageFile: File): Promise<{
+    foods: {
+      name: string;
+      estimatedGrams: number;
+      estimatedCalories: number;
+      estimatedProtein: number;
+      estimatedCarbs: number;
+      estimatedFat: number;
+      notes?: string;
+    }[];
+    rawAnalysis?: string;
+  }> {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    const token = this.getToken();
+    const response = await fetch(`${API_URL}/image-recognition/analyze`, {
+      method: "POST",
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: formData,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || `HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  }
 }
 
 export const api = new ApiClient();

@@ -18,6 +18,7 @@ builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<IEntryService, EntryService>();
 builder.Services.AddScoped<IMetricsService, MetricsService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IImageRecognitionService, ImageRecognitionService>();
 builder.Services.AddHttpClient();
 
 // JWT Authentication
