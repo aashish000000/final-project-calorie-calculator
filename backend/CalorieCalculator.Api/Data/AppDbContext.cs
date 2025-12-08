@@ -12,6 +12,9 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Food> Foods => Set<Food>();
     public DbSet<EntryItem> EntryItems => Set<EntryItem>();
+    public DbSet<WaterEntry> WaterEntries => Set<WaterEntry>();
+    public DbSet<FavoriteMeal> FavoriteMeals => Set<FavoriteMeal>();
+    public DbSet<FavoriteMealItem> FavoriteMealItems => Set<FavoriteMealItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -44,6 +47,40 @@ public class AppDbContext : DbContext
                   .WithMany(f => f.EntryItems)
                   .HasForeignKey(e => e.FoodId)
                   .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete conflict
+        });
+
+        // WaterEntry configuration
+        modelBuilder.Entity<WaterEntry>(entity =>
+        {
+            entity.HasOne(w => w.User)
+                  .WithMany()
+                  .HasForeignKey(w => w.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(w => new { w.UserId, w.Date });
+        });
+
+        // FavoriteMeal configuration
+        modelBuilder.Entity<FavoriteMeal>(entity =>
+        {
+            entity.HasOne(fm => fm.User)
+                  .WithMany()
+                  .HasForeignKey(fm => fm.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // FavoriteMealItem configuration
+        modelBuilder.Entity<FavoriteMealItem>(entity =>
+        {
+            entity.HasOne(fmi => fmi.FavoriteMeal)
+                  .WithMany(fm => fm.Items)
+                  .HasForeignKey(fmi => fmi.FavoriteMealId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(fmi => fmi.Food)
+                  .WithMany()
+                  .HasForeignKey(fmi => fmi.FoodId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         // Seed some global foods

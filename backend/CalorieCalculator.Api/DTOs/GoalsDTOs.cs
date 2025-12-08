@@ -8,6 +8,7 @@ public class UserGoalsDto
     public int ProteinGoal { get; set; }
     public int CarbsGoal { get; set; }
     public int FatGoal { get; set; }
+    public int WaterGoalMilliliters { get; set; }
 }
 
 public class UpdateGoalsRequest
@@ -23,5 +24,8 @@ public class UpdateGoalsRequest
 
     [Range(10, 300, ErrorMessage = "Fat goal must be between 10 and 300g")]
     public int FatGoal { get; set; }
+
+    [Range(500, 5000, ErrorMessage = "Water goal must be between 500 and 5000ml")]
+    public int? WaterGoalMilliliters { get; set; }
 }
 

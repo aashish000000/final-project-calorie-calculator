@@ -13,6 +13,11 @@ import type {
   ChatResponse,
   UserGoals,
   UpdateGoalsRequest,
+  WaterSummary,
+  WaterEntry,
+  FavoriteMeal,
+  CreateFavoriteMealRequest,
+  FoodSuggestions,
 } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
@@ -241,6 +246,88 @@ class ApiClient {
     }
 
     return response.json();
+  }
+
+  // Recipe Analyzer
+  async analyzeRecipe(recipeText: string, servings?: number): Promise<{
+    recipeName: string;
+    ingredients: {
+      name: string;
+      quantity: string;
+      unit: string;
+      calories: number;
+      protein: number;
+      carbs: number;
+      fat: number;
+    }[];
+    totalNutrition: {
+      calories: number;
+      protein: number;
+      carbs: number;
+      fat: number;
+    };
+    perServingNutrition: {
+      calories: number;
+      protein: number;
+      carbs: number;
+      fat: number;
+    };
+    servings: number;
+    instructions?: string;
+    prepTimeMinutes: number;
+    cookTimeMinutes: number;
+  }> {
+    return this.request("/recipe/analyze", {
+      method: "POST",
+      body: JSON.stringify({ recipeText, servings }),
+    });
+  }
+
+  // Water Tracking
+  async getWaterSummary(date?: string): Promise<WaterSummary> {
+    const params = date ? `?date=${date}` : "";
+    return this.request(`/water/summary${params}`);
+  }
+
+  async logWater(milliliters: number, date?: string): Promise<WaterEntry> {
+    return this.request("/water/log", {
+      method: "POST",
+      body: JSON.stringify({ milliliters, date }),
+    });
+  }
+
+  async deleteWaterEntry(entryId: number): Promise<void> {
+    return this.request(`/water/${entryId}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Favorite Meals
+  async getFavoriteMeals(): Promise<FavoriteMeal[]> {
+    return this.request("/favorite-meals");
+  }
+
+  async createFavoriteMeal(request: CreateFavoriteMealRequest): Promise<FavoriteMeal> {
+    return this.request("/favorite-meals", {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+  }
+
+  async deleteFavoriteMeal(mealId: number): Promise<void> {
+    return this.request(`/favorite-meals/${mealId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async getFavoriteMealItems(mealId: number): Promise<CreateEntryRequest[]> {
+    return this.request(`/favorite-meals/${mealId}/items`);
+  }
+
+  // Smart Suggestions
+  async getFoodSuggestions(date?: string): Promise<FoodSuggestions> {
+    const params = date ? `?date=${date}` : "";
+    return this.request(`/suggestions${params}`);
   }
 }
 

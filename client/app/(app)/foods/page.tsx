@@ -7,11 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/lib/api";
 import { foodSchema, type FoodFormData } from "@/lib/validations";
 import type { Food } from "@/lib/types";
-import { FiPlus, FiEdit2, FiTrash2, FiX } from "react-icons/fi";
+import { FiPlus, FiEdit2, FiTrash2, FiX, FiFileText } from "react-icons/fi";
+import RecipeAnalyzerModal from "@/components/RecipeAnalyzerModal";
 
 export default function FoodsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingFood, setEditingFood] = useState<Food | null>(null);
+  const [showRecipeAnalyzer, setShowRecipeAnalyzer] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: foods, isLoading } = useQuery({
@@ -104,10 +106,19 @@ export default function FoodsPage() {
           <h1 className="text-2xl font-bold text-gray-900">Foods</h1>
           <p className="text-gray-600">Manage your food database</p>
         </div>
-        <button onClick={openCreateModal} className="btn btn-primary flex items-center gap-2">
-          <FiPlus className="w-4 h-4" />
-          Add Food
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowRecipeAnalyzer(true)}
+            className="btn btn-secondary flex items-center gap-2"
+          >
+            <FiFileText className="w-4 h-4" />
+            <span className="hidden sm:inline">Analyze Recipe</span>
+          </button>
+          <button onClick={openCreateModal} className="btn btn-primary flex items-center gap-2">
+            <FiPlus className="w-4 h-4" />
+            Add Food
+          </button>
+        </div>
       </div>
 
       {/* Foods Table */}
@@ -222,6 +233,12 @@ export default function FoodsPage() {
           </div>
         </div>
       )}
+
+      {/* Recipe Analyzer Modal */}
+      <RecipeAnalyzerModal
+        isOpen={showRecipeAnalyzer}
+        onClose={() => setShowRecipeAnalyzer(false)}
+      />
     </div>
   );
 }

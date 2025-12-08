@@ -97,7 +97,8 @@ public class AuthService : IAuthService
             CalorieGoal = user.CalorieGoal,
             ProteinGoal = user.ProteinGoal,
             CarbsGoal = user.CarbsGoal,
-            FatGoal = user.FatGoal
+            FatGoal = user.FatGoal,
+            WaterGoalMilliliters = user.WaterGoalMilliliters
         };
     }
 
@@ -110,6 +111,11 @@ public class AuthService : IAuthService
         user.ProteinGoal = request.ProteinGoal;
         user.CarbsGoal = request.CarbsGoal;
         user.FatGoal = request.FatGoal;
+        
+        if (request.WaterGoalMilliliters.HasValue)
+        {
+            user.WaterGoalMilliliters = request.WaterGoalMilliliters.Value;
+        }
 
         await _context.SaveChangesAsync();
 
@@ -118,7 +124,8 @@ public class AuthService : IAuthService
             CalorieGoal = user.CalorieGoal,
             ProteinGoal = user.ProteinGoal,
             CarbsGoal = user.CarbsGoal,
-            FatGoal = user.FatGoal
+            FatGoal = user.FatGoal,
+            WaterGoalMilliliters = user.WaterGoalMilliliters
         };
     }
 

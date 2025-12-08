@@ -34,6 +34,7 @@ public class User
     public int ProteinGoal { get; set; } = 150;
     public int CarbsGoal { get; set; } = 250;
     public int FatGoal { get; set; } = 65;
+    public int WaterGoalMilliliters { get; set; } = 2000; // 2 liters default
 
     // Navigation properties
     public ICollection<Food> Foods { get; set; } = new List<Food>();

@@ -102,6 +102,7 @@ export interface UserGoals {
   proteinGoal: number;
   carbsGoal: number;
   fatGoal: number;
+  waterGoalMilliliters: number;
 }
 
 export interface UpdateGoalsRequest {
@@ -109,6 +110,74 @@ export interface UpdateGoalsRequest {
   proteinGoal: number;
   carbsGoal: number;
   fatGoal: number;
+  waterGoalMilliliters?: number;
+}
+
+// Water tracking types
+export interface WaterEntry {
+  id: number;
+  milliliters: number;
+  createdAt: string;
+}
+
+export interface WaterSummary {
+  date: string;
+  totalMilliliters: number;
+  goalMilliliters: number;
+  percentageOfGoal: number;
+  entries: WaterEntry[];
+}
+
+// Favorite Meals types
+export interface FavoriteMeal {
+  id: number;
+  name: string;
+  description?: string;
+  createdAt: string;
+  items: FavoriteMealItem[];
+  totalCalories: number;
+  totalProtein: number;
+  totalCarbs: number;
+  totalFat: number;
+}
+
+export interface FavoriteMealItem {
+  id: number;
+  foodId: number;
+  foodName: string;
+  grams: number;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+export interface CreateFavoriteMealRequest {
+  name: string;
+  description?: string;
+  items: { foodId: number; grams: number }[];
+}
+
+// Smart Suggestions types
+export interface FoodSuggestions {
+  remaining: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  suggestions: SuggestedFood[];
+  message: string;
+}
+
+export interface SuggestedFood {
+  name: string;
+  reason: string;
+  estimatedGrams: number;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
 }
 
 // Chat types

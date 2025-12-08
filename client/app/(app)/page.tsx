@@ -7,6 +7,10 @@ import { api } from "@/lib/api";
 import { FiPlus, FiTrash2, FiChevronLeft, FiChevronRight, FiSettings } from "react-icons/fi";
 import Link from "next/link";
 import { GoalsModal } from "@/components/GoalsModal";
+import WaterTracker from "@/components/WaterTracker";
+import FavoriteMeals from "@/components/FavoriteMeals";
+import SmartSuggestions from "@/components/SmartSuggestions";
+import AdvancedCharts from "@/components/AdvancedCharts";
 
 // Circular Progress Component
 function CircularProgress({ 
@@ -396,6 +400,26 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Water Tracker */}
+        <div className="mb-4">
+          <WaterTracker />
+        </div>
+
+        {/* Favorite Meals */}
+        <div className="mb-4">
+          <FavoriteMeals />
+        </div>
+
+        {/* Smart Suggestions */}
+        <div className="mb-4">
+          <SmartSuggestions />
+        </div>
+
+        {/* Advanced Charts */}
+        <div className="mb-4">
+          <AdvancedCharts />
         </div>
 
         {/* Meals Section */}
