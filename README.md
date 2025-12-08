@@ -1,145 +1,129 @@
-# Food Calorie Calculator
+# Calorie Calculator Project
 
-A full-stack web application for tracking daily calorie and macro intake.
+A full-stack calorie tracking application with an AI-powered nutrition assistant.
 
-## Project Structure
+## 📁 Project Structure
 
 ```
-├── api/                    # ASP.NET Core 8 Web API
-│   └── CalorieCalculator.Api/
-│       ├── Controllers/    # API endpoints
-│       ├── Services/       # Business logic
-│       ├── Entities/       # Database models
-│       ├── DTOs/           # Data transfer objects
-│       ├── Data/           # EF Core DbContext
-│       └── Migrations/     # Database migrations
+calorie-calculator/
 │
-├── frontend/               # Next.js 14 Frontend
-│   ├── app/               # App Router pages
-│   ├── components/        # React components
-│   └── lib/               # Utilities & API client
+├── 📂 backend/              ← Backend API (C# / ASP.NET Core)
+│   ├── CalorieCalculator.Api/
+│   │   ├── Controllers/     ← API endpoints
+│   │   ├── Services/        ← Business logic & AI chatbot
+│   │   ├── Data/            ← Database context
+│   │   ├── DTOs/            ← Data transfer objects
+│   │   ├── Entities/        ← Database models
+│   │   └── Program.cs       ← App entry point
+│   └── CalorieCalculator.sln
 │
-└── (presentation files)   # Original presentation website
+├── 📂 client/               ← Main Application (Next.js / React)
+│   ├── app/
+│   │   ├── (app)/           ← Protected app pages
+│   │   │   ├── foods/       ← Food database
+│   │   │   ├── log/         ← Daily food log
+│   │   │   ├── settings/    ← User settings
+│   │   │   └── page.tsx     ← Dashboard
+│   │   └── auth/            ← Login/Register
+│   ├── components/          ← React components
+│   │   ├── ChatBot.tsx      ← AI nutrition assistant
+│   │   ├── Navbar.tsx
+│   │   └── ...
+│   └── lib/
+│       ├── api.ts           ← API client
+│       └── auth-context.tsx ← Authentication
+│
+└── 📂 docs/                 ← Documentation/Landing Page
+    ├── app/
+    ├── components/          ← Landing page components
+    │   ├── Hero.tsx
+    │   ├── ProjectOverview.tsx
+    │   └── ...
+    └── page.tsx
 ```
 
-## Tech Stack
+## 🚀 Quick Start
 
-### Backend
-- ASP.NET Core 8 Web API
-- Entity Framework Core
-- SQL Server
-- JWT Authentication
-- BCrypt password hashing
+### 1. Start the Backend (Port 5000)
+```bash
+cd backend/CalorieCalculator.Api
+dotnet run
+```
+Backend will run at: **http://localhost:5000**
 
-### Frontend
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- React Query (TanStack Query)
-- React Hook Form + Zod
-- Recharts
+### 2. Start the Client (Port 3000)
+```bash
+cd client
+npm install
+npm run dev
+```
+Client will run at: **http://localhost:3000**
 
-## Getting Started
+### 3. Start the Docs (Port 3001)
+```bash
+cd docs
+npm install
+npm run dev -- -p 3001
+```
+Docs will run at: **http://localhost:3001**
+
+## ⚙️ Configuration
 
 ### Backend Setup
-
-1. Navigate to the API directory:
-```bash
-cd api/CalorieCalculator.Api
-```
-
-2. Update connection string in `appsettings.json`:
+1. Navigate to `backend/CalorieCalculator.Api/appsettings.json`
+2. Add your OpenAI API key:
 ```json
 {
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=CalorieCalculatorDb;Trusted_Connection=True;TrustServerCertificate=True;"
+  "OpenAI": {
+    "ApiKey": "your-api-key-here"
   }
 }
 ```
 
-3. Run the API:
-```bash
-dotnet run
-```
-
-The API will be available at http://localhost:5000
-
 ### Frontend Setup
-
-1. Navigate to the frontend directory:
-```bash
-cd frontend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Create `.env.local`:
+1. Navigate to `client/`
+2. Create `.env.local` file:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
-4. Run the development server:
-```bash
-npm run dev
-```
+## 🎯 Features
 
-The app will be available at http://localhost:3000
+- **Food Logging**: Track daily meals and macros
+- **AI Chatbot**: Get personalized nutrition advice powered by OpenAI
+- **Goal Setting**: Set and track calorie and macro goals
+- **Food Database**: Search and add foods
+- **Dashboard**: View daily progress and metrics
+- **Multi-language**: Support for multiple languages
 
-## Features
+## 🛠️ Tech Stack
 
-- **User Authentication** - Secure JWT-based login and registration
-- **Food Database** - Add and manage foods with nutritional info (per 100g)
-- **Meal Logging** - Log meals with automatic calorie calculation
-- **Dashboard** - View daily and weekly nutrition summaries
-- **Charts** - Visualize your progress over time
+**Backend:**
+- ASP.NET Core 8.0
+- Entity Framework Core
+- SQLite Database
+- JWT Authentication
+- OpenAI API Integration
 
-## API Endpoints
+**Frontend:**
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+- JWT Authentication
 
-### Auth
-- `POST /api/auth/register` - Create account
-- `POST /api/auth/login` - Sign in
-- `GET /api/auth/me` - Get current user
+## 📊 API Endpoints
 
-### Foods
-- `GET /api/foods` - List foods
-- `POST /api/foods` - Create food
-- `PUT /api/foods/{id}` - Update food
-- `DELETE /api/foods/{id}` - Delete food
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `GET /api/foods` - Get food database
+- `POST /api/entries` - Log food entry
+- `GET /api/metrics/daily` - Get daily metrics
+- `POST /api/chat` - AI chatbot
 
-### Entries
-- `GET /api/food-entries` - List entries
-- `POST /api/food-entries` - Log meal
-- `DELETE /api/food-entries/{id}` - Delete entry
+## 📝 Development Notes
 
-### Metrics
-- `GET /api/metrics/daily` - Daily summary
-- `GET /api/metrics/range` - Weekly/monthly data
-
-## Screenshots
-
-### Dashboard
-- Daily calorie, protein, carbs, and fat totals
-- Weekly calorie chart
-- Today's meal entries
-
-### Foods Page
-- List of all foods with nutrition info
-- Add/edit/delete custom foods
-- Pre-seeded with common foods
-
-### Log Meal
-- Select food from dropdown
-- Enter grams consumed
-- Preview calculated nutrition
-
-## Author
-
-**Aashish Joshi**  
-Computer Science Major, New Jersey City University
-
-## License
-
-MIT
+- Backend runs on port **5000**
+- Client runs on port **3000**
+- Docs/Landing page runs on port **3001**
+- Make sure all three servers are running for full functionality

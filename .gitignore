@@ -34,3 +34,34 @@ yarn-error.log*
 next-env.d.ts
 
 api/CalorieCalculator.Api/appsettings.json
+api/CalorieCalculator.Api/*.db
+api/CalorieCalculator.Api/*.db-shm
+api/CalorieCalculator.Api/*.db-wal
+.cursor/
+
+# Node modules
+**/node_modules/
+node_modules/
+
+# Build outputs
+**/dist/
+**/build/
+**/.next/
+
+# Environment
+**/.env.local
+**/.env
+
+# IDE
+.vscode/
+.idea/
+
+# Build artifacts (contains secrets!)
+**/bin/
+**/obj/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+# Secrets
+**/appsettings.json

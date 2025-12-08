@@ -60,11 +60,16 @@ export function ChatBot() {
       // Call API with message and conversation history
       const response = await api.sendChatMessage(userMessage, conversationHistory);
 
-      // Use response.reply from the API - no hard-coded strings
-      if (response.reply && response.reply.trim()) {
+      // Support both camelCase `reply` and PascalCase `Reply` from the API
+      const replyText =
+        (response as any).reply ??
+        (response as any).Reply ??
+        "";
+
+      if (replyText && replyText.trim()) {
         setMessages([
           ...newMessages,
-          { role: "assistant", content: response.reply },
+          { role: "assistant", content: replyText },
         ]);
       } else {
         throw new Error("Empty response");
@@ -193,4 +198,3 @@ export function ChatBot() {
     </>
   );
 }
-
