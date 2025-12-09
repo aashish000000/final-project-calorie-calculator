@@ -1,4 +1,5 @@
 # Netlify configuration for Next.js deployment
+# Note: publish directory is intentionally not set - the @netlify/plugin-nextjs handles it
 [build]
   base = "client"
   command = "npm run build"
