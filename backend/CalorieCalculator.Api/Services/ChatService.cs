@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using CalorieCalculator.Api.Data;
@@ -14,11 +14,13 @@ public class ChatService : IChatService
     private readonly bool _isConfigured;
     private readonly AppDbContext _context;
     private readonly IMetricsService _metricsService;
+    private readonly HttpClient _httpClient;
 
     public ChatService(IConfiguration configuration, AppDbContext context, IMetricsService metricsService, IHttpClientFactory httpClientFactory)
     {
         _context = context;
         _metricsService = metricsService;
+        _httpClient = httpClientFactory.CreateClient();
 
         // Read from appsettings.json (OpenAI:ApiKey) or environment variable
         _apiKey = configuration["OpenAI:ApiKey"]
@@ -126,10 +128,7 @@ public class ChatService : IChatService
                 temperature = 0.7
             };
 
-            var jsonContent = JsonSerializer.Serialize(requestBody);
-            
-            // Use curl to make the API call (bypasses .NET HTTP issues on macOS)
-            var responseBody = await CallOpenAIWithCurl(jsonContent);
+            var responseBody = await CallOpenAIAsync(requestBody);
             
             if (string.IsNullOrEmpty(responseBody))
             {
@@ -171,50 +170,17 @@ public class ChatService : IChatService
         }
     }
 
-    private async Task<string> CallOpenAIWithCurl(string jsonBody)
+    private async Task<string> CallOpenAIAsync(object requestBody)
     {
-        // Write JSON to a temp file to avoid shell escaping issues
-        var tempFile = Path.GetTempFileName();
-        await File.WriteAllTextAsync(tempFile, jsonBody);
+        var jsonContent = JsonSerializer.Serialize(requestBody);
+        var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-        try
-        {
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/usr/bin/curl",
-                    Arguments = $"-s -X POST https://api.openai.com/v1/chat/completions " +
-                               $"-H \"Content-Type: application/json\" " +
-                               $"-H \"Authorization: Bearer {_apiKey}\" " +
-                               $"-d @{tempFile}",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+        request.Content = content;
 
-            process.Start();
-            var output = await process.StandardOutput.ReadToEndAsync();
-            var error = await process.StandardError.ReadToEndAsync();
-            await process.WaitForExitAsync();
-
-            if (!string.IsNullOrEmpty(error))
-            {
-                Console.WriteLine($"Curl error: {error}");
-            }
-
-            return output;
-        }
-        finally
-        {
-            // Clean up temp file
-            if (File.Exists(tempFile))
-            {
-                File.Delete(tempFile);
-            }
-        }
+        var response = await _httpClient.SendAsync(request);
+        return await response.Content.ReadAsStringAsync();
     }
 
     private string BuildSystemPrompt(

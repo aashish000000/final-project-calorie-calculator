@@ -1,4 +1,5 @@
-using System.Diagnostics;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using CalorieCalculator.Api.Data;
 using CalorieCalculator.Api.DTOs;
@@ -11,12 +12,15 @@ public class SuggestionsService : ISuggestionsService
     private readonly AppDbContext _context;
     private readonly string? _apiKey;
     private readonly bool _isConfigured;
+    private readonly HttpClient _httpClient;
 
-    public SuggestionsService(AppDbContext context, IConfiguration configuration)
+    public SuggestionsService(AppDbContext context, IConfiguration configuration, IHttpClientFactory httpClientFactory)
     {
         _context = context;
-        _apiKey = configuration["OpenAI:ApiKey"];
-        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey);
+        _httpClient = httpClientFactory.CreateClient();
+        _apiKey = configuration["OpenAI:ApiKey"]
+                     ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey) && _apiKey != "YOUR_OPENAI_API_KEY_HERE";
     }
 
     public async Task<FoodSuggestionsResponse> GetFoodSuggestionsAsync(int userId, DateTime? date = null)
@@ -101,8 +105,7 @@ public class SuggestionsService : ISuggestionsService
             max_tokens = 1000
         };
 
-        var jsonBody = JsonSerializer.Serialize(requestBody);
-        var responseJson = await CallOpenAIWithCurl(jsonBody);
+        var responseJson = await CallOpenAIAsync(requestBody);
 
         try
         {
@@ -192,47 +195,16 @@ Return ONLY the JSON array, no markdown or other text.";
         }).ToList();
     }
 
-    private async Task<string> CallOpenAIWithCurl(string jsonBody)
+    private async Task<string> CallOpenAIAsync(object requestBody)
     {
-        var tempFile = Path.GetTempFileName();
-        await File.WriteAllTextAsync(tempFile, jsonBody);
+        var jsonContent = JsonSerializer.Serialize(requestBody);
+        var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-        try
-        {
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/usr/bin/curl",
-                    Arguments = $"-s -X POST https://api.openai.com/v1/chat/completions " +
-                               $"-H \"Content-Type: application/json\" " +
-                               $"-H \"Authorization: Bearer {_apiKey}\" " +
-                               $"-d @{tempFile}",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+        request.Content = content;
 
-            process.Start();
-            var output = await process.StandardOutput.ReadToEndAsync();
-            var error = await process.StandardError.ReadToEndAsync();
-            await process.WaitForExitAsync();
-
-            if (!string.IsNullOrEmpty(error))
-            {
-                Console.WriteLine($"Curl error: {error}");
-            }
-
-            return output;
-        }
-        finally
-        {
-            if (File.Exists(tempFile))
-            {
-                File.Delete(tempFile);
-            }
-        }
+        var response = await _httpClient.SendAsync(request);
+        return await response.Content.ReadAsStringAsync();
     }
 }
