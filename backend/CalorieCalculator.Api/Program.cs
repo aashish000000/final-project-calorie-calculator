@@ -55,7 +55,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003")
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:3001", 
+                "http://localhost:3002", 
+                "http://localhost:3003",
+                "https://aashishthegreatcalorieproject.netlify.app"
+              )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -93,12 +99,9 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Configure pipeline - Enable Swagger in all environments for API testing
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("AllowFrontend");
 app.UseAuthentication();

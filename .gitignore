@@ -60,6 +60,7 @@ node_modules/
 # Build artifacts (contains secrets!)
 **/bin/
 **/obj/
+**/publish/
 **/*.db
 **/*.db-shm
 **/*.db-wal
