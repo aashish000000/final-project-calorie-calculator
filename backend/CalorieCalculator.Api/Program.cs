@@ -12,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// OpenAI configuration
+var openAiApiKey = builder.Configuration["OpenAI:ApiKey"];
+builder.Services.AddSingleton(new OpenAiSettings { ApiKey = openAiApiKey });
+
 // Add Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFoodService, FoodService>();

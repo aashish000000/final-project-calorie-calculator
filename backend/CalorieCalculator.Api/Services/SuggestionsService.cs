@@ -14,13 +14,12 @@ public class SuggestionsService : ISuggestionsService
     private readonly bool _isConfigured;
     private readonly HttpClient _httpClient;
 
-    public SuggestionsService(AppDbContext context, IConfiguration configuration, IHttpClientFactory httpClientFactory)
+    public SuggestionsService(AppDbContext context, OpenAiSettings openAiSettings, IHttpClientFactory httpClientFactory)
     {
         _context = context;
         _httpClient = httpClientFactory.CreateClient();
-        _apiKey = configuration["OpenAI:ApiKey"]
-                     ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey) && _apiKey != "YOUR_OPENAI_API_KEY_HERE";
+        _apiKey = openAiSettings.ApiKey;
+        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey);
     }
 
     public async Task<FoodSuggestionsResponse> GetFoodSuggestionsAsync(int userId, DateTime? date = null)

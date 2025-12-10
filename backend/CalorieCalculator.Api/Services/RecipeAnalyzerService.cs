@@ -11,12 +11,11 @@ public class RecipeAnalyzerService : IRecipeAnalyzerService
     private readonly bool _isConfigured;
     private readonly HttpClient _httpClient;
 
-    public RecipeAnalyzerService(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+    public RecipeAnalyzerService(OpenAiSettings openAiSettings, IHttpClientFactory httpClientFactory)
     {
         _httpClient = httpClientFactory.CreateClient();
-        _apiKey = configuration["OpenAI:ApiKey"]
-                     ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey) && _apiKey != "YOUR_OPENAI_API_KEY_HERE";
+        _apiKey = openAiSettings.ApiKey;
+        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey);
     }
 
     public async Task<RecipeAnalysisResponse> AnalyzeRecipeAsync(string recipeText, int? servings = null)

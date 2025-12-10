@@ -16,18 +16,17 @@ public class ChatService : IChatService
     private readonly IMetricsService _metricsService;
     private readonly HttpClient _httpClient;
 
-    public ChatService(IConfiguration configuration, AppDbContext context, IMetricsService metricsService, IHttpClientFactory httpClientFactory)
+    public ChatService(OpenAiSettings openAiSettings, AppDbContext context, IMetricsService metricsService, IHttpClientFactory httpClientFactory)
     {
         _context = context;
         _metricsService = metricsService;
         _httpClient = httpClientFactory.CreateClient();
 
-        // Read from appsettings.json (OpenAI:ApiKey) or environment variable
-        _apiKey = configuration["OpenAI:ApiKey"]
-                     ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        // Read from configuration (OpenAI:ApiKey)
+        _apiKey = openAiSettings.ApiKey;
 
-        // If the key is absent or still the placeholder, disable the chat client
-        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey) && _apiKey != "YOUR_OPENAI_API_KEY_HERE";
+        // If the key is absent, disable the chat client
+        _isConfigured = !string.IsNullOrWhiteSpace(_apiKey);
     }
 
     public async Task<ChatResponse> GetResponseAsync(int userId, ChatRequest request)

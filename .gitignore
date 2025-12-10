@@ -66,5 +66,4 @@ node_modules/
 **/*.db-wal
 
 # Secrets - use appsettings.Example.json as a template
-# appsettings.json should NOT be gitignored for Docker builds
-# Use environment variables for actual secrets in production
+backend/CalorieCalculator.Api/appsettings.json
