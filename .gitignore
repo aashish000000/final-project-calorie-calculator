@@ -65,5 +65,6 @@ node_modules/
 **/*.db-shm
 **/*.db-wal
 
-# Secrets
-**/appsettings.json
+# Secrets - use appsettings.Example.json as a template
+# appsettings.json should NOT be gitignored for Docker builds
+# Use environment variables for actual secrets in production
