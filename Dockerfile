@@ -19,5 +19,7 @@ RUN dotnet publish "backend/CalorieCalculator.Api/CalorieCalculator.Api.csproj" 
 # ---- Final runtime image ----
 FROM base AS final
 WORKDIR /app
+# Create data directory for SQLite
+RUN mkdir -p data
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "CalorieCalculator.Api.dll"]
